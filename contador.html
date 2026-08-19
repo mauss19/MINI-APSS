@@ -9,23 +9,24 @@
 </head>
 <body>
 
-  <div class="contenedor">
+   <main class="contenedor">
     <div class="circulo-progreso" id="circulo"></div>
 
-    <div class="panel" id="panel">
-      <h1 id="valor">0</h1>
-      <div class="botones">
+    <section class="panel" id="panel">
+      <h1 id="valor" aria-live="polite">0</h1>
+
+      <div class="botones" id="contenedor-botones">
         <div class="grupo-restar">
           <span class="signo-menos" id="signo-menos">-</span>
-          <button id="btn-restar">-1</button>
+          <button type="button" id="btn-restar" data-action="restar">-1</button>
         </div>
-        <button id="btn-reset">Reset</button>
-        <button id="btn-sumar">+1</button>
+        <button type="button" id="btn-reset" data-action="reset">Reset</button>
+        <button type="button" id="btn-sumar" data-action="sumar">+1</button>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
- <script src="js/contador.js"></script>
+ <script src="js/contador.js" defer></script>
 
 </body>
 </html>
