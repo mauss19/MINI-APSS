@@ -8,17 +8,25 @@
   
 </head>
 <body>
-
   <main>
-    <header>
-      <input type="text" id="input-ciudad" placeholder="Busca una ciudad...">
-      <button id="btn-buscar">Buscar</button>
-    </header>
+    <!-- Convertido a <form> para capturar el evento 'submit' (funciona al presionar Enter o dar Clic) -->
+    <form id="form-clima">
+      <input 
+        type="text" 
+        id="input-ciudad" 
+        placeholder="Busca una ciudad..." 
+        autocomplete="off" 
+        required
+      >
+      <button type="submit" id="btn-buscar">Buscar</button>
+    </form>
 
     <section id="resultado">
-      <p style="color: #cbd5e1; padding: 20px 0;">Ingresa una ciudad para consultar el clima en tiempo real.</p>
+      <!-- Estilos en línea movidos a clases para no ensuciar el HTML -->
+      <p class="mensaje-estado">Ingresa una ciudad para consultar el clima en tiempo real.</p>
     </section>
   </main>
+ 
 
  
 <script src="js/tiempo2.js"></script>

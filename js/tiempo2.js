@@ -1,8 +1,12 @@
- 
-   const inputCiudad = document.querySelector('#input-ciudad');
+
+
+    // Selección de elementos
+const formClima = document.querySelector('#form-clima');
+const inputCiudad = document.querySelector('#input-ciudad');
 const btnBuscar = document.querySelector('#btn-buscar');
 const resultado = document.querySelector('#resultado');
 
+// Intérprete de códigos WMO de Open-Meteo
 function interpretarClima(code) {
   switch (code) {
     case 0: return { texto: "Cielo despejado", icono: "☀️" };
@@ -18,13 +22,8 @@ function interpretarClima(code) {
   }
 }
 
-// Función optimizada para cambiar el fondo garantizando que SIEMPRE cargue imagen
+// Cambiar fondo con imagen dinámicamente
 async function cambiarFondoCiudad(nombreCiudad) {
-  // Generamos una URL directa y rápida buscando por el nombre de la ciudad
-  const urlImagen = `https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80`;
-  const urlDinamica = `https://images.unsplash.com/photo-1477959858617-67f30ac4ce09?auto=format&fit=crop&w=1200&q=80`;
-
-  // Intentamos obtener primero la imagen de Wikipedia
   try {
     const wikiApiUrl = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(nombreCiudad)}`;
     const res = await fetch(wikiApiUrl);
@@ -37,14 +36,12 @@ async function cambiarFondoCiudad(nombreCiudad) {
       }
     }
   } catch (e) {
-    // Si falla Wikipedia, pasamos al respaldo sin detener la ejecución
+    // Si falla Wikipedia, pasa al respaldo
   }
 
-  // Respaldo confiable si Wikipedia no tiene foto de la ciudad
   aplicarFondo(`https://picsum.photos/1200/800?blur=1`);
 }
 
-// Auxiliar para precargar la imagen rápidamente y aplicar la transparencia ideal
 function aplicarFondo(url) {
   const img = new Image();
   img.src = url;
@@ -53,11 +50,14 @@ function aplicarFondo(url) {
   };
 }
 
+// Obtener datos del clima mediante API
 async function obtenerClima(ciudad) {
   try {
-    resultado.innerHTML = "<p style='color: #cbd5e1; padding: 20px 0;'>Cargando datos...</p>";
+    // Activar indicador de carga y deshabilitar botón
+    btnBuscar.disabled = true;
+    resultado.innerHTML = `<div class="spinner"></div><p class="mensaje-estado">Consultando el clima...</p>`;
 
-    // 1. Obtener coordenadas
+    // 1. Obtener Coordenadas
     const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(ciudad)}&count=1&language=es`;
     const geoRes = await fetch(geoUrl);
     const geoData = await geoRes.json();
@@ -68,7 +68,7 @@ async function obtenerClima(ciudad) {
 
     const { latitude, longitude, name, country } = geoData.results[0];
 
-    // 2. Obtener Clima
+    // 2. Obtener Clima Actual
     const climaUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m`;
     const climaRes = await fetch(climaUrl);
     const climaData = await climaRes.json();
@@ -80,52 +80,56 @@ async function obtenerClima(ciudad) {
     const viento = Math.round(actual.wind_speed_10m);
     const infoClima = interpretarClima(actual.weather_code);
 
-    // 3. Cargar la foto de fondo sin fallas
+    // 3. Fondo dinámico
     cambiarFondoCiudad(name);
 
-    // 4. Mostrar datos
+    // 4. Inyectar HTML con animación de entrada
     resultado.innerHTML = `
-      <div class="icono-clima">${infoClima.icono}</div>
-      <div class="nombre-ciudad">${name}</div>
-      <div class="pais">${country}</div>
-      <div class="temperatura">${temp}°C</div>
-      <div class="estado-clima">${infoClima.texto}</div>
+      <div class="fade-in">
+        <div class="icono-clima">${infoClima.icono}</div>
+        <div class="nombre-ciudad">${name}</div>
+        <div class="pais">${country || ''}</div>
+        <div class="temperatura">${temp}°C</div>
+        <div class="estado-clima">${infoClima.texto}</div>
 
-      <div class="detalles-grid">
-        <div class="tarjeta-detalle">
-          <span>🌡️</span>
-          <span>SENSACIÓN</span>
-          <span>${sensacion}°C</span>
-        </div>
-        <div class="tarjeta-detalle">
-          <span>💧</span>
-          <span>HUMEDAD</span>
-          <span>${humedad}%</span>
-        </div>
-        <div class="tarjeta-detalle">
-          <span>💨</span>
-          <span>VIENTO</span>
-          <span>${viento} km/h</span>
-        </div>
-        <div class="tarjeta-detalle">
-          <span>📍</span>
-          <span>UBICACIÓN</span>
-          <span>OK</span>
+        <div class="detalles-grid">
+          <div class="tarjeta-detalle">
+            <span>🌡️</span>
+            <span>SENSACIÓN</span>
+            <span>${sensacion}°C</span>
+          </div>
+          <div class="tarjeta-detalle">
+            <span>💧</span>
+            <span>HUMEDAD</span>
+            <span>${humedad}%</span>
+          </div>
+          <div class="tarjeta-detalle">
+            <span>💨</span>
+            <span>VIENTO</span>
+            <span>${viento} km/h</span>
+          </div>
+          <div class="tarjeta-detalle">
+            <span>📍</span>
+            <span>ESTADO</span>
+            <span>OK</span>
+          </div>
         </div>
       </div>
     `;
 
   } catch (error) {
     resultado.innerHTML = `<p class="error">❌ ${error.message}</p>`;
+  } finally {
+    btnBuscar.disabled = false;
   }
 }
 
-btnBuscar.addEventListener('click', () => {
-  const ciudad = inputCiudad.value.trim();
-  if (ciudad !== "") obtenerClima(ciudad);
-});
-
-inputCiudad.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') btnBuscar.click();
-});
-  
+// Listener global para envío de formulario (Enter o clic)
+if (formClima) {
+  formClima.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const ciudad = inputCiudad.value.trim();
+    if (ciudad !== "") obtenerClima(ciudad);
+  });
+}
+ 
