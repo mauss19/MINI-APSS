@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscador de Color con Control de Brillo</title>
+  <link rel="stylesheet" href="css/colores.css">
+ 
+</head>
+<body>
+<!-- Sección de Búsqueda -->
+<header class="contenedor-busqueda">
+  <label for="input-color">busca tu color:</label>
+  
+  <input type="text" id="input-color" class="input-color">
+  <input type="button" id="btn-limpiar" class="btn-limpiar" value="limpiar">
+</header>
+
+<!-- Tarjeta con Información y Controles -->
+<main class="tarjeta">
+  <h2>Fondo actual: <span class="codigo-color" id="texto-color">#435804</span></h2>
+  
+  <button id="btn-cambiar">Cambiar Color</button>
+
+  <section class="control-brillo">
+    <div class="etiquetas-brillo">
+      <span>☀️ Claro</span>
+      <span>Oscuro 🌙</span>
+    </div>
+    <input type="range" id="deslizador-brillo" min="0" max="100" value="50">
+  </section>
+</main>
+
+
+<script src="js/colores.js"></script>
+</body>
+</html>

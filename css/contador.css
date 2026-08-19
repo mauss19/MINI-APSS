@@ -1,0 +1,120 @@
+
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .contenedor {
+      position: relative;
+      width: 380px;
+      height: 380px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .circulo-progreso {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Barras circulares */
+    .barra {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 4px;
+      height: 24px;
+      background-color: #a855f7;
+      opacity: 0.15;
+      border-radius: 2px;
+      transform-origin: center bottom;
+      transition: opacity 0.1s ease, background-color 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    /* Barras activas en Morado */
+    .barra.activo {
+      opacity: 1;
+      background-color: #a855f7;
+      box-shadow: 0 0 6px #a855f7;
+    }
+
+    /* Barras restadas en Naranja fluorescente */
+    .barra.naranja {
+      opacity: 1;
+      background-color: #ff4500;
+      box-shadow: 0 0 8px #ff4500;
+    }
+
+    /* Panel central (Azul por defecto) */
+    .panel {
+      position: relative;
+      z-index: 10;
+      background-color: #3b82f6;
+      padding: 20px 28px;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* Panel en Modo Naranja Fluorescente */
+    .panel.restar {
+      background-color: #ff4500;
+      box-shadow: 0 0 25px #ff4500, 0 0 50px rgba(255, 69, 0, 0.6);
+    }
+
+    .panel h1 {
+      font-size: 52px;
+      margin: 0 0 10px 0;
+    }
+
+    .botones {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .grupo-restar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Indicador del signo - en blanco arriba del botón */
+    .signo-menos {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: bold;
+      height: 18px;
+      visibility: hidden;
+      line-height: 1;
+    }
+
+    .panel.restar .signo-menos {
+      visibility: visible;
+    }
+
+    .botones button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: white;
+      color: #121212;
+      transition: transform 0.1s ease;
+    }
+
+    .botones button:active {
+      transform: scale(0.95);
+    }
+  
